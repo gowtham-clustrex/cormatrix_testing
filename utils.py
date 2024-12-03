@@ -32,6 +32,17 @@ def get_next_element_from_text(driver: WebDriver, text: str):
     return next_element
 
 
+def get_next_element_from_text_two(driver: WebDriver, text: str):
+    current_element = driver.find_element(
+        AppiumBy.ANDROID_UIAUTOMATOR,
+        f'new UiScrollable(new UiSelector().scrollable(true)).scrollIntoView(new UiSelector().text("{text}"))',
+    )
+    next_element = driver.find_element(
+        AppiumBy.XPATH, f'//*[@text="{text}"]/following-sibling::*[1]'
+    )
+    return next_element
+
+
 def get_text_from_element(ele: WebDriver):
     list_ele = ele.find_elements(AppiumBy.XPATH, ".//android.widget.TextView")
     data = [i.text for i in list_ele]
@@ -60,8 +71,20 @@ def find_element_which_contain_text(driver: WebDriver, text: str):
     return element
 
 
-def get_next_ele(current_element: WebDriver):
-    return current_element.find_element_by_xpath("./following-sibling::*")
+def get_next_ele(current_element):
+    # sleep(2)
+    # current_element.send_keys("200")
+    # return current_element
+    # return current_element.find_element(AppiumBy.XPATH, "./following-sibling::*")
+
+    try:
+        next_input = current_element.find_element(
+            AppiumBy.XPATH, "./following-sibling::android.widget.EditText"
+        )
+        return next_input
+    except:
+        print("No next input box found.")
+        return None
 
 
 def get_all_element_from_Scroll_element(driver: WebDriver):
